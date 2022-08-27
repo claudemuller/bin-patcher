@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./bin-patcher.png" alt="Bin Patcher" width="50%" height="50%" />
+    <img src="./bin-patcher.png" alt="Bin Patcher" width="25%" height="25%" />
 </p>
 
 # Bin Patcher
