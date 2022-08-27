@@ -4,7 +4,7 @@
 
 # Bin Patcher
 
-A little Go application that is able to patch binaries given that the source and destination signatures are of the same length e.g. `JE` and `JNE`.
+A little Go application that is able to patch binaries given that the source and destination signatures are of the same length e.g. `JE` and `JNE` both being 2 bytes.
 
 # Building
 
