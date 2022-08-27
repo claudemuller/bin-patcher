@@ -1,5 +1,5 @@
 <p align="center">
-    ![Bin Patcher](./bin-patcher.png)
+    <img src="./bin-patcher.png" alt="Bin Patcher"/>
 </p>
 
 # Bin Patcher
