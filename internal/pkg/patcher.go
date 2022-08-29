@@ -31,8 +31,7 @@ func Patch(inFile, outFile, sigStr, patchStr string) error {
 	}
 
 	// Make a backup of the file.
-	err = os.WriteFile(inFile + ".bak", data, 0770)
-	if err != nil {
+	if err = os.WriteFile(inFile+".bak", data, 0770); err != nil {
 		return fmt.Errorf("error writing backup binary: %w", err)
 	}
 
@@ -45,22 +44,11 @@ func Patch(inFile, outFile, sigStr, patchStr string) error {
 	// Write the patched file.
 	log.Printf("writing patched binary to %s", outFile)
 
-	err = os.WriteFile(outFile, patchedData, 0770)
-	if err != nil {
+	if err = os.WriteFile(outFile, patchedData, 0770); err != nil {
 		return fmt.Errorf("error writing patched binary: %w", err)
 	}
 
 	return nil
-}
-
-func checkSig(data []byte, sig []byte) bool {
-	for i := range data {
-		if data[i] != sig[i] {
-			return false
-		}
-	}
-
-	return true
 }
 
 func decodeSigs(sigStr, patchStr string) ([]byte, []byte, error) {
@@ -79,13 +67,7 @@ func decodeSigs(sigStr, patchStr string) ([]byte, []byte, error) {
 
 func patchData(data, sig, patch []byte) []byte {
 	for i := 0; i < len(data)-len(sig); i++ {
-		if data[i] == sig[0] {
-			if data[i+1] == sig[1] {
-				fmt.Println(data[i], sig[0])
-			}
-		}
-
-		if bytes.Compare(data[i:i+len(sig)], sig) == 0 {
+		if bytes.Equal(data[i:i+len(sig)], sig) {
 			log.Printf("signature found at %#x, patching...", i)
 
 			return doPatch(data, patch, i)
@@ -110,7 +92,7 @@ func doPatch(data, patch []byte, loc int) []byte {
 		c++
 	}
 
-	if bytes.Compare(data, output) != 0 {
+	if !bytes.Equal(data, output) {
 		log.Printf("patched %v bytes", c)
 
 		return output

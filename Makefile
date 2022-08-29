@@ -9,4 +9,4 @@ build:
 	go build -o bin-patcher cmd/main.go
 
 run:
-	./bin-patcher
+	./bin-patcher -in $(in) -out $(out) -sig $(sig) -patch $(patch)

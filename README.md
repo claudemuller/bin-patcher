@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="./bin-patcher.png" alt="Bin Patcher" width="40%" height="40%" />
+    <img src="./bin-patcher.png" alt="Bin Patcher" />
 </p>
 
 # Bin Patcher
@@ -23,5 +23,5 @@ make clean
 # Running
 
 ```bash
-make run -in $(in) -out $(out) -sig $(sig) -patch $(patch)
+make run in=<input_bin> out=<output_bin> sig=<signature_to_find> patch=<patch_signature>
 ```
