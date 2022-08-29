@@ -6,6 +6,8 @@
 
 A little Go application that is able to patch binaries given that the source and destination signatures are of the same length e.g. `JE` and `JNE` both being 2 bytes.
 
+That said, ensure that a signature and patch of 5 bytes is passed in to ensure the correct locating of the instruction in question e.g. a signature of `ff08c07409` with a patch of `ff08c07509` where the last 2 bytes represent the instruction to be altered.
+
 # Building
 
 ```bash
@@ -21,5 +23,5 @@ make clean
 # Running
 
 ```bash
-make run
+make run -in $(in) -out $(out) -sig $(sig) -patch $(patch)
 ```
