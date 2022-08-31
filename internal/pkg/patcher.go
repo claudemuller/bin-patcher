@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"log"
 	"os"
 )
 
@@ -13,7 +12,7 @@ var ErrSignatureSizeMismatch = errors.New("signatures do not match in length")
 
 var ErrSignatureNotFound = errors.New("signature was not found in the binary")
 
-func Patch(inFile, outFile, sigStr, patchStr string) error {
+func Patch(inFile, outFile, sigStr, patchStr string, logger *Log) error {
 	// Read the file.
 	data, err := os.ReadFile(inFile)
 	if err != nil {
@@ -36,13 +35,13 @@ func Patch(inFile, outFile, sigStr, patchStr string) error {
 	}
 
 	// Patch.
-	patchedData := patchData(data, sig, patch)
+	patchedData := patchData(data, sig, patch, logger)
 	if patchedData == nil {
 		return ErrSignatureNotFound
 	}
 
 	// Write the patched file.
-	log.Printf("writing patched binary to %s", outFile)
+	logger.log(fmt.Sprintf("writing patched binary to %s", outFile))
 
 	if err = os.WriteFile(outFile, patchedData, 0770); err != nil {
 		return fmt.Errorf("error writing patched binary: %w", err)
@@ -65,19 +64,19 @@ func decodeSigs(sigStr, patchStr string) ([]byte, []byte, error) {
 	return sig, patch, nil
 }
 
-func patchData(data, sig, patch []byte) []byte {
+func patchData(data, sig, patch []byte, logger *Log) []byte {
 	for i := 0; i < len(data)-len(sig); i++ {
 		if bytes.Equal(data[i:i+len(sig)], sig) {
-			log.Printf("signature found at %#x, patching...", i)
+			logger.log(fmt.Sprintf("signature found at %#x, patching...", i))
 
-			return doPatch(data, patch, i)
+			return doPatch(data, patch, i, logger)
 		}
 	}
 
 	return nil
 }
 
-func doPatch(data, patch []byte, loc int) []byte {
+func doPatch(data, patch []byte, loc int, logger *Log) []byte {
 	var output = make([]byte, len(data))
 
 	n := copy(output, data)
@@ -93,7 +92,7 @@ func doPatch(data, patch []byte, loc int) []byte {
 	}
 
 	if !bytes.Equal(data, output) {
-		log.Printf("patched %v bytes", c)
+		logger.log(fmt.Sprintf("patched %v bytes", c))
 
 		return output
 	}

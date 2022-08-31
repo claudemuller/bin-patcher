@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"log"
-	"os"
 
 	"github.com/claudemuller/bin-patcher/internal/pkg"
 )
@@ -17,16 +16,20 @@ func main() {
 	log.SetPrefix("bin-patcher > ")
 	flag.Parse()
 
-	if *inFile == "" || *sig == "" || *patch == "" {
-		flag.Usage()
-		os.Exit(1)
-	}
+	// if *inFile == "" || *sig == "" || *patch == "" {
+	// 	flag.Usage()
+	// 	os.Exit(1)
+	// }
 
 	if *outFile == "" {
 		*outFile = *inFile + ".patched"
 	}
 
-	if err := pkg.Patch(*inFile, *outFile, *sig, *patch); err != nil {
-		log.Fatalf("patching %s failed: %v", *inFile, err)
-	}
+	app := pkg.NewApp()
+
+	app.Run()
+
+	// if err := pkg.Patch(*inFile, *outFile, *sig, *patch); err != nil {
+	// 	log.Fatalf("patching %s failed: %v", *inFile, err)
+	// }
 }
