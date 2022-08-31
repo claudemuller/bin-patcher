@@ -69,15 +69,27 @@ func (a *App) loop(w *g.MasterWindow) func() {
 		content := a.logger.getLogs()
 		winSize, _ := w.GetSize()
 
+		var infile string
+
+		if len(a.inFile) > 0 {
+			infile = fmt.Sprintf("%s...%s", a.inFile[:15], a.inFile[len(a.inFile)-15:])
+		}
+
+		var outFile string
+
+		if len(a.outFile) > 0 {
+			fmt.Sprintf("%s...%s", a.outFile[:15], a.outFile[len(a.outFile)-15:])
+		}
+
 		widgets := []g.Widget{
 			g.Row(
 				g.Label("Select input file:"),
-				g.Label(fmt.Sprintf("%s...%s", a.inFile[:15], a.inFile[len(a.inFile)-15:])),
+				g.Label(infile),
 				g.Button("Select").OnClick(a.onLoadInFile),
 			),
 			g.Row(
 				g.Label("Select output file:"),
-				g.Label(fmt.Sprintf("%s...%s", a.outFile[:15], a.outFile[len(a.outFile)-15:])),
+				g.Label(outFile),
 				g.Button("Select").OnClick(a.onLoadOutFile),
 			),
 			g.Row(
