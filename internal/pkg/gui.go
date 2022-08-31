@@ -78,7 +78,7 @@ func (a *App) loop(w *g.MasterWindow) func() {
 		var outFile string
 
 		if len(a.outFile) > 0 {
-			fmt.Sprintf("%s...%s", a.outFile[:15], a.outFile[len(a.outFile)-15:])
+			outFile = fmt.Sprintf("%s...%s", a.outFile[:15], a.outFile[len(a.outFile)-15:])
 		}
 
 		widgets := []g.Widget{
