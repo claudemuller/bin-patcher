@@ -1,6 +1,6 @@
 phony: all
 
-all: clean build run
+all: clean build gui
 
 clean:
 	rm -rf bin-patcher
@@ -8,5 +8,8 @@ clean:
 build:
 	go build -o bin-patcher cmd/main.go
 
-run:
+cli:
 	./bin-patcher -in $(in) -out $(out) -sig $(sig) -patch $(patch)
+
+gui:
+	./bin-patcher

@@ -22,6 +22,14 @@ make clean
 
 # Running
 
+## CLI
+
 ```bash
-make run in=<input_bin> out=<output_bin> sig=<signature_to_find> patch=<patch_signature>
+make cli in=<input_bin> out=<output_bin> sig=<signature_to_find> patch=<patch_signature>
+```
+
+## GUI
+
+```bash
+make gui
 ```

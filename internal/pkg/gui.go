@@ -10,7 +10,7 @@ import (
 )
 
 type App struct {
-	logger  *Log
+	Logger  *Log
 	inFile  string
 	outFile string
 	sig     string
@@ -19,7 +19,7 @@ type App struct {
 
 func NewApp() App {
 	return App{
-		logger: newLogger(),
+		Logger: newLogger(),
 	}
 }
 
@@ -36,7 +36,7 @@ func (a *App) onLoadInFile() {
 		g.Msgbox("Error opening file", err.Error())
 	}
 
-	a.logger.log("Loaded file: " + a.inFile)
+	a.Logger.log("Loaded file: " + a.inFile)
 }
 
 func (a *App) onLoadOutFile() {
@@ -47,11 +47,11 @@ func (a *App) onLoadOutFile() {
 		g.Msgbox("Error opening file for saving", err.Error())
 	}
 
-	a.logger.log("Loaded file: " + a.outFile)
+	a.Logger.log("Loaded file: " + a.outFile)
 }
 
 func (a *App) onPatch() {
-	if err := Patch(a.inFile, a.outFile, a.sig, a.patch, a.logger); err != nil {
+	if err := Patch(a.inFile, a.outFile, a.sig, a.patch, a.Logger); err != nil {
 		g.Msgbox("Error patching file", err.Error())
 	}
 }
@@ -66,7 +66,7 @@ func (a *App) canPatch() bool {
 
 func (a *App) loop(w *g.MasterWindow) func() {
 	return func() {
-		content := a.logger.getLogs()
+		content := a.Logger.getLogs()
 		winSize, _ := w.GetSize()
 
 		var infile string
