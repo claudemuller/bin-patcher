@@ -1,4 +1,4 @@
-package pkg
+package logger
 
 import (
 	"log"
@@ -11,18 +11,18 @@ type Log struct {
 	logs   []string
 }
 
-func newLogger() *Log {
+func NewLogger() *Log {
 	return &Log{
 		logger: log.New(os.Stdout, "bin-patcher", 0),
 	}
 }
 
-func (l *Log) log(msg string) {
+func (l *Log) Log(msg string) {
 	l.logs = append(l.logs, msg)
 
 	l.logger.Printf("%+v", msg)
 }
 
-func (l *Log) getLogs() string {
+func (l *Log) GetLogs() string {
 	return strings.Join(l.logs, "\n")
 }

@@ -1,4 +1,4 @@
-package pkg
+package gui
 
 import (
 	"errors"
@@ -6,11 +6,13 @@ import (
 	"os"
 
 	g "github.com/AllenDang/giu"
+	log "github.com/claudemuller/bin-patcher/internal/pkg/logger"
+	"github.com/claudemuller/bin-patcher/internal/pkg/patcher"
 	"github.com/sqweek/dialog"
 )
 
 type App struct {
-	Logger  *Log
+	Logger  *log.Log
 	inFile  string
 	outFile string
 	sig     string
@@ -19,7 +21,7 @@ type App struct {
 
 func NewApp() App {
 	return App{
-		Logger: newLogger(),
+		Logger: log.NewLogger(),
 	}
 }
 
@@ -36,7 +38,7 @@ func (a *App) onLoadInFile() {
 		g.Msgbox("Error opening file", err.Error())
 	}
 
-	a.Logger.log("Loaded file: " + a.inFile)
+	a.Logger.Log("Loaded file: " + a.inFile)
 }
 
 func (a *App) onLoadOutFile() {
@@ -47,11 +49,11 @@ func (a *App) onLoadOutFile() {
 		g.Msgbox("Error opening file for saving", err.Error())
 	}
 
-	a.Logger.log("Loaded file: " + a.outFile)
+	a.Logger.Log("Loaded file: " + a.outFile)
 }
 
 func (a *App) onPatch() {
-	if err := Patch(a.inFile, a.outFile, a.sig, a.patch, a.Logger); err != nil {
+	if err := patcher.Patch(a.inFile, a.outFile, a.sig, a.patch, a.Logger); err != nil {
 		g.Msgbox("Error patching file", err.Error())
 	}
 }
@@ -66,7 +68,7 @@ func (a *App) canPatch() bool {
 
 func (a *App) loop(w *g.MasterWindow) func() {
 	return func() {
-		content := a.Logger.getLogs()
+		content := a.Logger.GetLogs()
 		winSize, _ := w.GetSize()
 
 		var infile string

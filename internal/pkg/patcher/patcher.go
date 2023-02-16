@@ -1,4 +1,4 @@
-package pkg
+package patcher
 
 import (
 	"bytes"
@@ -6,13 +6,15 @@ import (
 	"errors"
 	"fmt"
 	"os"
+
+	log "github.com/claudemuller/bin-patcher/internal/pkg/logger"
 )
 
 var ErrSignatureSizeMismatch = errors.New("signatures do not match in length")
 
 var ErrSignatureNotFound = errors.New("signature was not found in the binary")
 
-func Patch(inFile, outFile, sigStr, patchStr string, logger *Log) error {
+func Patch(inFile, outFile, sigStr, patchStr string, logger *log.Log) error {
 	// Read the file.
 	data, err := os.ReadFile(inFile)
 	if err != nil {
@@ -41,7 +43,7 @@ func Patch(inFile, outFile, sigStr, patchStr string, logger *Log) error {
 	}
 
 	// Write the patched file.
-	logger.log(fmt.Sprintf("writing patched binary to %s", outFile))
+	logger.Log(fmt.Sprintf("writing patched binary to %s", outFile))
 
 	if err = os.WriteFile(outFile, patchedData, 0770); err != nil {
 		return fmt.Errorf("error writing patched binary: %w", err)
@@ -64,10 +66,10 @@ func decodeSigs(sigStr, patchStr string) ([]byte, []byte, error) {
 	return sig, patch, nil
 }
 
-func patchData(data, sig, patch []byte, logger *Log) []byte {
+func patchData(data, sig, patch []byte, logger *log.Log) []byte {
 	for i := 0; i < len(data)-len(sig); i++ {
 		if bytes.Equal(data[i:i+len(sig)], sig) {
-			logger.log(fmt.Sprintf("signature found at %#x, patching...", i))
+			logger.Log(fmt.Sprintf("signature found at %#x, patching...", i))
 
 			return doPatch(data, patch, i, logger)
 		}
@@ -76,8 +78,8 @@ func patchData(data, sig, patch []byte, logger *Log) []byte {
 	return nil
 }
 
-func doPatch(data, patch []byte, loc int, logger *Log) []byte {
-	var output = make([]byte, len(data))
+func doPatch(data, patch []byte, loc int, logger *log.Log) []byte {
+	output := make([]byte, len(data))
 
 	n := copy(output, data)
 	if n < 0 {
@@ -92,7 +94,7 @@ func doPatch(data, patch []byte, loc int, logger *Log) []byte {
 	}
 
 	if !bytes.Equal(data, output) {
-		logger.log(fmt.Sprintf("patched %v bytes", c))
+		logger.Log(fmt.Sprintf("patched %v bytes", c))
 
 		return output
 	}

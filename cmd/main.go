@@ -2,15 +2,15 @@ package main
 
 import (
 	"flag"
-	"log"
+	l "log"
 	"os"
 
-	"github.com/claudemuller/bin-patcher/internal/pkg"
+	"github.com/claudemuller/bin-patcher/internal/pkg/gui"
+	log "github.com/claudemuller/bin-patcher/internal/pkg/logger"
+	"github.com/claudemuller/bin-patcher/internal/pkg/patcher"
 )
 
 func main() {
-	log.SetPrefix("bin-patcher > ")
-
 	inFile := flag.String("in", "", "the binary file to patch")
 	outFile := flag.String("out", "", "the destination of the patched binary file")
 	sig := flag.String("sig", "", "the signature to patch")
@@ -21,7 +21,7 @@ func main() {
 		*outFile = *inFile + ".patched"
 	}
 
-	app := pkg.NewApp()
+	app := gui.NewApp()
 
 	if len(os.Args) > 1 {
 		startCli(*inFile, *outFile, *sig, *patch, app.Logger)
@@ -31,13 +31,13 @@ func main() {
 	app.Run()
 }
 
-func startCli(inFile, outFile, sig, patch string, logger *pkg.Log) {
+func startCli(inFile, outFile, sig, patch string, logger *log.Log) {
 	if inFile == "" || sig == "" || patch == "" {
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	if err := pkg.Patch(inFile, outFile, sig, patch, logger); err != nil {
-		log.Fatalf("patching %s failed: %v", inFile, err)
+	if err := patcher.Patch(inFile, outFile, sig, patch, logger); err != nil {
+		l.Fatalf("patching %s failed: %v", inFile, err)
 	}
 }
